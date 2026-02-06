@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Experiment, ComparisonExperiment } from '../../types';
 import { Button } from '../ui/Button';
 import { MetricsComparison } from './MetricsDisplay';
+import { RadarChart } from './RadarChart';
 import { useExperimentStore } from '../../hooks/useExperiments';
 import { getModelColor } from '../../lib/model-registry';
 import { cn } from '../../lib/utils';
@@ -126,6 +127,50 @@ export function ComparisonView({ experiments, onClose }: ComparisonViewProps) {
           label2={exp2.modelName}
         />
       </div>
+
+      {/* Radar comparison - only show if both experiments have radar scores */}
+      {exp1.annotation?.radar && exp2.annotation?.radar && (
+        <div className="p-4 border-b border-slate-200 bg-white">
+          <h3 className="text-sm font-medium text-slate-700 mb-3">Quality Comparison</h3>
+          <div className="flex items-center justify-center gap-8">
+            <div className="text-center">
+              <RadarChart
+                scores={exp1.annotation.radar}
+                compareScores={exp2.annotation.radar}
+                size={220}
+                color="#119a6a"
+                compareColor="#f59e0b"
+              />
+              <div className="mt-3 flex items-center justify-center gap-4 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#119a6a]"></div>
+                  <span className="text-slate-600">{exp1.modelName}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
+                  <span className="text-slate-600">{exp2.modelName}</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-sm text-slate-600 max-w-xs space-y-2">
+              {Object.entries(exp1.annotation.radar).map(([key, value1]) => {
+                const value2 = exp2.annotation?.radar?.[key as keyof typeof exp2.annotation.radar] || 0;
+                const diff = value1 - value2;
+                if (Math.abs(diff) >= 1) {
+                  const stronger = diff > 0 ? exp1.modelName : exp2.modelName;
+                  return (
+                    <div key={key} className="text-xs">
+                      <span className="font-medium text-[#119a6a]">{stronger}</span> stronger in{' '}
+                      <span className="capitalize">{key}</span> <span className="text-slate-400">(+{Math.abs(diff)})</span>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Same prompt indicator */}
       {samePrompt && (

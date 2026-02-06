@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Annotation, ANNOTATION_TAGS, AnnotationTag } from '../../types';
+import { Annotation, ANNOTATION_TAGS, AnnotationTag, RadarScores } from '../../types';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { RadarPanel } from './RadarPanel';
 import { cn } from '../../lib/utils';
 
 interface AnnotationPanelProps {
@@ -177,6 +178,13 @@ export function AnnotationPanel({ annotation, onUpdate, compact = false }: Annot
           rows={3}
         />
       </div>
+
+      {/* Evaluation Radar */}
+      <RadarPanel
+        scores={annotation?.radar}
+        onUpdate={(radar: RadarScores) => onUpdate({ radar })}
+        compact={false}
+      />
     </div>
   );
 }

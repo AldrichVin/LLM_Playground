@@ -223,6 +223,102 @@ The evaluation surface uses a dual-rating system (thumbs + stars) because:
 - **Stars (5-point)**: Detailed assessment when comparing similar outputs
 - **Tags**: Enable filtering and pattern recognition across experiments
 
+## Evaluation Radar
+
+### Why Multi-Dimensional Quality Assessment?
+
+Traditional LLM evaluation uses binary metrics: thumbs up/down, single star ratings, or winner selection. These **flatten multi-dimensional quality** into a single score, hiding crucial tradeoffs that reveal how models actually behave.
+
+A response can be:
+- **Accurate but verbose** (Phi-3 explaining machine learning in 330 tokens)
+- **Creative but hallucinated** (beautiful prose that's factually wrong)
+- **Well-formatted but shallow** (perfect haiku structure with cliché content)
+- **Fast but incomplete** (Llama rushing to wrong conclusions)
+
+The **Evaluation Radar** captures these tradeoffs across **6 quality dimensions**, providing a more nuanced understanding of model strengths and weaknesses.
+
+### The 6 Dimensions
+
+Each dimension maps to a common LLM failure mode discovered during real testing:
+
+| Dimension | What it measures | Why it matters | Example failure |
+|-----------|-----------------|----------------|-----------------|
+| **Accuracy** | Factual correctness | Core quality signal | Llama answering "8" on the sheep riddle |
+| **Relevance** | Addresses the actual prompt | Catches evasion and tangents | Model writing essay when asked for list |
+| **Conciseness** | Appropriate length, no filler | Key UX metric for production | Phi-3's 54-token non-haiku |
+| **Creativity** | Novel phrasing, interesting angles | Important for generative tasks | Repetitive or templated responses |
+| **Format** | Follows structure constraints | Critical for automation | Ignoring "write 3 bullet points" instruction |
+| **Reasoning** | Logical coherence, shows thinking | Differentiates model tiers | Llama's arithmetic shortcuts |
+
+These dimensions emerged from systematic testing. **Accuracy** and **Reasoning** caught Phi-3's strength on trick questions. **Conciseness** and **Format** exposed both models' opposite failure modes (Llama too terse, Phi-3 too verbose). **Creativity** and **Relevance** revealed when models optimize for the wrong objective.
+
+### How It Works
+
+**Scoring**: Rate each dimension 0-5 using quick-select dots or preset patterns:
+- **"Accurate & Verbose"** - High accuracy/reasoning, low conciseness (typical Phi-3)
+- **"Creative & Off-topic"** - High creativity, low relevance/accuracy (high-temp failures)
+- **"Concise & Accurate"** - Balanced excellence (ideal outputs)
+
+**Visualization**: SVG radar chart with hexagonal grid. Filled polygon shows quality profile at a glance.
+
+**Comparison Overlay**: When comparing two experiments with radar scores, both polygons overlay with distinct colors (teal vs amber). Immediately reveals **where each model excels**:
+
+```
+Example: "Write a haiku about debugging code"
+
+Llama 3.2 (teal):
+- Accuracy: 3, Relevance: 5, Conciseness: 5
+- Creativity: 4, Format: 5, Reasoning: 2
+
+Phi-3 (amber):
+- Accuracy: 2, Relevance: 3, Conciseness: 1
+- Creativity: 4, Format: 1, Reasoning: 3
+
+Visual insight: Llama's polygon is tight and symmetrical (15 tokens, perfect 5-7-5).
+Phi-3's polygon bulges at Creativity but collapses at Format (54 tokens of prose).
+```
+
+The overlay **exposes the tradeoff**: Llama optimizes for format adherence and conciseness, while Phi-3 prioritizes creative expression at the cost of following constraints.
+
+### Real-World Example: The Sheep Riddle
+
+**Prompt**: "A farmer has 17 sheep. All but 9 die. How many are left?"
+
+**Llama 3.2 scores**:
+- Accuracy: 1 (answered 8, wrong)
+- Relevance: 5 (addressed the question)
+- Conciseness: 5 (80 tokens, efficient)
+- Creativity: 2 (standard arithmetic)
+- Format: 4 (clear structure)
+- Reasoning: 1 (arithmetic shortcut)
+
+**Phi-3 scores**:
+- Accuracy: 5 (answered 9, correct)
+- Relevance: 5 (addressed the question)
+- Conciseness: 3 (explained the trick)
+- Creativity: 3 (pedagogical approach)
+- Format: 4 (well-structured)
+- Reasoning: 5 (showed logical thinking)
+
+**Radar insight**: Llama's polygon is flat along Accuracy/Reasoning but tall on Conciseness. Phi-3's polygon is symmetrical and large—it excels across most dimensions but sacrifices speed (12s vs 9s) and conciseness.
+
+This **visually confirms** the core finding: **Llama trades reasoning depth for speed**, while **Phi-3 trades speed for correctness**. A single "winner" label would hide this tradeoff entirely.
+
+### Why This Improves Understanding of LLM Behaviour
+
+1. **Reveals optimization targets**: Models optimize for different objectives. The radar makes this visible.
+2. **Exposes parameter effects**: Adjusting temperature/top-p affects different dimensions differently. Track how "creativity" and "accuracy" trade off as you increase temperature.
+3. **Identifies model niches**: Some tasks need accuracy (factual QA), others need format adherence (code, structured data). The radar shows which model suits which task.
+4. **Reduces evaluation bias**: Binary ratings encourage picking a "better" model. Radar scoring forces evaluating strengths independently, revealing nuance.
+
+### Design Rationale
+
+**Why 6 axes?** Fewer (3-4) would oversimplify. More (8+) would create visual clutter and evaluation fatigue. Six captures the key quality dimensions without overwhelming the evaluator.
+
+**Why radar over bar chart?** Radars show **shape**—the visual gestalt reveals model personality. A "spiky" polygon (high variance across dimensions) indicates a specialist model. A "round" polygon indicates generalist quality. Bar charts require comparing 6 separate bars; radars convey this at a glance.
+
+**Why optional?** Not all evaluations need multi-dimensional scoring. Quick thumbs-up/down remains available. Radar is for when you want to understand **why** an output succeeded or failed, not just **whether** it did.
+
 ## Pipeline Flow Visualization
 
 The chat interface features an animated SVG pipeline diagram that visualizes the request flow:

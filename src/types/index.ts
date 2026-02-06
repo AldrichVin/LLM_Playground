@@ -23,12 +23,22 @@ export interface Message {
   timestamp: number;
 }
 
+export interface RadarScores {
+  accuracy: number;    // 0-5: Factual correctness
+  relevance: number;   // 0-5: Addresses the actual prompt
+  conciseness: number; // 0-5: Appropriate length, no filler
+  creativity: number;  // 0-5: Novel phrasing, interesting angles
+  format: number;      // 0-5: Follows structure constraints
+  reasoning: number;   // 0-5: Logical coherence, shows thinking
+}
+
 export interface Annotation {
   rating: 1 | 2 | 3 | 4 | 5 | null;
   thumbs: 'up' | 'down' | null;
   tags: string[];
   notes: string;
   createdAt: number;
+  radar?: RadarScores;
 }
 
 export const ANNOTATION_TAGS = [
