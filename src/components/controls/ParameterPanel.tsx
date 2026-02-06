@@ -43,7 +43,7 @@ export function ParameterPanel({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className={cn(
-                'px-3 py-2 rounded-lg text-sm font-medium',
+                'px-3 py-2 rounded-lg text-sm font-medium text-center w-full',
                 'border transition-all duration-200',
                 activePreset === preset.id
                   ? 'border-[#119a6a] bg-[#e6f7f0] text-[#0e7d56]'
