@@ -58,14 +58,34 @@ export function ChatInterface({
               {messages.length} message{messages.length !== 1 ? 's' : ''} in conversation
             </p>
           </div>
-          <PipelineFlow
-            state={pipelineState}
-            modelName={modelName}
-            error={error}
-            tokenCount={tokenCount}
-            collapsed={pipelineCollapsed}
-            onToggleCollapse={() => setPipelineCollapsed(!pipelineCollapsed)}
-          />
+          {/* Compact Pipeline Status Button */}
+          <button
+            onClick={() => setPipelineCollapsed(!pipelineCollapsed)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors text-sm"
+          >
+            <div className={`w-2 h-2 rounded-full ${
+              pipelineState === 'error' ? 'bg-red-500' :
+              pipelineState === 'streaming' ? 'bg-indigo-500 animate-pulse' :
+              pipelineState === 'pending' ? 'bg-amber-500 animate-pulse' :
+              pipelineState === 'complete' ? 'bg-emerald-500' :
+              'bg-slate-300'
+            }`} />
+            <span className="text-slate-700">
+              {pipelineState === 'error' ? 'Error' :
+               pipelineState === 'streaming' ? 'Streaming' :
+               pipelineState === 'pending' ? 'Processing' :
+               pipelineState === 'complete' ? 'Complete' :
+               'Ready'}
+            </span>
+            <svg
+              className={`w-3 h-3 text-slate-400 transition-transform ${!pipelineCollapsed ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
         {messages.length > 0 && (
           <Button variant="ghost" size="sm" onClick={onClear}>
@@ -91,7 +111,7 @@ export function ChatInterface({
             exit={{ opacity: 0, height: 0 }}
             className="border-b border-slate-200 overflow-hidden"
           >
-            <div className="p-4">
+            <div className="p-4 bg-slate-50/50">
               <PipelineFlow
                 state={pipelineState}
                 modelName={modelName}
