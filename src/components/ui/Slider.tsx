@@ -36,11 +36,11 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
             onChange={(e) => onChange(parseFloat(e.target.value))}
             className={cn(
               'w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer',
-              'focus:outline-none focus:ring-2 focus:ring-indigo-500/20',
+              'focus:outline-none focus:ring-2 focus:ring-[#119a6a]/20',
               '[&::-webkit-slider-thumb]:appearance-none',
               '[&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4',
               '[&::-webkit-slider-thumb]:rounded-full',
-              '[&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-indigo-500 [&::-webkit-slider-thumb]:to-violet-500',
+              '[&::-webkit-slider-thumb]:bg-[#119a6a]',
               '[&::-webkit-slider-thumb]:shadow-md',
               '[&::-webkit-slider-thumb]:cursor-pointer',
               '[&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150',
@@ -48,14 +48,14 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
               '[&::-moz-range-thumb]:appearance-none',
               '[&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4',
               '[&::-moz-range-thumb]:rounded-full',
-              '[&::-moz-range-thumb]:bg-gradient-to-r [&::-moz-range-thumb]:from-indigo-500 [&::-moz-range-thumb]:to-violet-500',
+              '[&::-moz-range-thumb]:bg-[#119a6a]',
               '[&::-moz-range-thumb]:border-0',
               '[&::-moz-range-thumb]:shadow-md',
               '[&::-moz-range-thumb]:cursor-pointer',
               className
             )}
             style={{
-              background: `linear-gradient(to right, #6366f1 0%, #8b5cf6 ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`,
+              background: `linear-gradient(to right, #119a6a 0%, #119a6a ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`,
             }}
             {...props}
           />

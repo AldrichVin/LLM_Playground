@@ -304,7 +304,7 @@ export function ExperimentLog({
             className={cn(
               'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-all',
               showFilters || activeFilterCount > 0
-                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                ? 'bg-[#e6f7f0] border-[#119a6a] text-[#0e7d56]'
                 : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
             )}
           >
@@ -318,7 +318,7 @@ export function ExperimentLog({
             </svg>
             Filters
             {activeFilterCount > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 bg-indigo-500 text-white text-xs rounded-full">
+              <span className="ml-1 px-1.5 py-0.5 bg-[#119a6a] text-white text-xs rounded-full">
                 {activeFilterCount}
               </span>
             )}
@@ -445,7 +445,7 @@ export function ExperimentLog({
                     setRatingFilter('all');
                     setTagFilter('all');
                   }}
-                  className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                  className="text-xs text-[#119a6a] hover:text-[#0e7d56] font-medium"
                 >
                   Clear filters
                 </button>
@@ -494,7 +494,7 @@ export function ExperimentLog({
                   setRatingFilter('all');
                   setTagFilter('all');
                 }}
-                className="mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                className="mt-4 text-sm text-[#119a6a] hover:text-[#0e7d56] font-medium"
               >
                 Clear all filters
               </button>

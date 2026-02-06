@@ -65,9 +65,9 @@ export function ChatInterface({
           >
             <div className={`w-2 h-2 rounded-full ${
               pipelineState === 'error' ? 'bg-red-500' :
-              pipelineState === 'streaming' ? 'bg-indigo-500 animate-pulse' :
+              pipelineState === 'streaming' ? 'bg-[#119a6a] animate-pulse' :
               pipelineState === 'pending' ? 'bg-amber-500 animate-pulse' :
-              pipelineState === 'complete' ? 'bg-emerald-500' :
+              pipelineState === 'complete' ? 'bg-[#119a6a]' :
               'bg-slate-300'
             }`} />
             <span className="text-slate-700">
@@ -133,7 +133,7 @@ export function ChatInterface({
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center h-full text-center"
           >
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#119a6a] flex items-center justify-center shadow-lg mb-4">
               <svg
                 className="w-8 h-8 text-white"
                 fill="none"

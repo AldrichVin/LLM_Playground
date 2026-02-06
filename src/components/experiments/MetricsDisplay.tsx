@@ -20,7 +20,7 @@ function MetricItem({ label, value, unit, highlight }: MetricItemProps) {
       <div
         className={cn(
           'text-lg font-semibold font-mono',
-          highlight ? 'text-indigo-600' : 'text-slate-900'
+          highlight ? 'text-[#119a6a]' : 'text-slate-900'
         )}
       >
         {value}
@@ -47,7 +47,7 @@ export function MetricsDisplay({ metrics, compact }: MetricsDisplayProps) {
             metrics.totalTokens
           )} tokens
         </span>
-        <span className="font-mono text-indigo-600">
+        <span className="font-mono text-[#119a6a]">
           {metrics.tokensPerSecond.toFixed(1)} t/s
         </span>
       </div>

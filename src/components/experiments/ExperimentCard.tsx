@@ -55,7 +55,7 @@ export function ExperimentCard({
               e.stopPropagation();
               onToggleCompare();
             }}
-            className="w-4 h-4 rounded border-slate-300 text-indigo-500 focus:ring-indigo-500/20"
+            className="w-4 h-4 rounded border-slate-300 text-[#119a6a] focus:ring-[#119a6a]/20"
           />
         </div>
       </CardHeader>
@@ -121,7 +121,7 @@ export function ExperimentCard({
               setShowAnnotation(!showAnnotation);
             }}
             className={cn(
-              showAnnotation ? 'text-indigo-600 bg-indigo-50' : 'text-slate-500 hover:text-slate-600'
+              showAnnotation ? 'text-[#119a6a] bg-[#e6f7f0]' : 'text-slate-500 hover:text-slate-600'
             )}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,7 +178,7 @@ export function ExperimentRow({
       onClick={onSelect}
       className={cn(
         'cursor-pointer transition-colors duration-150',
-        isSelected ? 'bg-indigo-50' : 'hover:bg-slate-50'
+        isSelected ? 'bg-[#e6f7f0]' : 'hover:bg-slate-50'
       )}
     >
       <td className="px-4 py-3">
@@ -190,7 +190,7 @@ export function ExperimentRow({
             e.stopPropagation();
             onToggleCompare();
           }}
-          className="w-4 h-4 rounded border-slate-300 text-indigo-500 focus:ring-indigo-500/20"
+          className="w-4 h-4 rounded border-slate-300 text-[#119a6a] focus:ring-[#119a6a]/20"
         />
       </td>
       <td className="px-4 py-3">
@@ -210,7 +210,7 @@ export function ExperimentRow({
       <td className="px-4 py-3 text-right font-mono text-sm text-slate-600">
         {experiment.metrics.latencyMs}ms
       </td>
-      <td className="px-4 py-3 text-right font-mono text-sm text-indigo-600">
+      <td className="px-4 py-3 text-right font-mono text-sm text-[#119a6a]">
         {experiment.metrics.tokensPerSecond.toFixed(1)} t/s
       </td>
       <td className="px-4 py-3 text-sm text-slate-500">

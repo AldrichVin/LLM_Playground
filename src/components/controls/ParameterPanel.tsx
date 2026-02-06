@@ -46,7 +46,7 @@ export function ParameterPanel({
                 'px-3 py-2 rounded-lg text-sm font-medium',
                 'border transition-all duration-200',
                 activePreset === preset.id
-                  ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                  ? 'border-[#119a6a] bg-[#e6f7f0] text-[#0e7d56]'
                   : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
               )}
             >

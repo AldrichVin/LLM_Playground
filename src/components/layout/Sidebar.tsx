@@ -84,14 +84,14 @@ export function Sidebar({ currentView, onViewChange, experimentCount, comparison
               'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left',
               'transition-colors duration-200',
               currentView === item.id
-                ? 'bg-white text-indigo-600 shadow-sm border border-slate-200'
+                ? 'bg-white text-[#119a6a] shadow-sm border border-slate-200'
                 : 'text-slate-600 hover:bg-white hover:text-slate-900'
             )}
           >
             {item.icon}
             <span className="font-medium text-sm">{item.label}</span>
             {item.badge !== undefined && item.badge > 0 && (
-              <span className="ml-auto bg-indigo-100 text-indigo-600 text-xs font-medium px-2 py-0.5 rounded-full">
+              <span className="ml-auto bg-[#e6f7f0] text-[#119a6a] text-xs font-medium px-2 py-0.5 rounded-full">
                 {item.badge}
               </span>
             )}

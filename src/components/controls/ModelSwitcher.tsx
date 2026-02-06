@@ -46,7 +46,7 @@ export function ModelSwitcher({ selectedModel, onModelChange, localModels }: Mod
                 'w-full p-3 rounded-xl text-left transition-all duration-200',
                 'border',
                 isSelected
-                  ? 'border-indigo-500 bg-indigo-50/50 ring-2 ring-indigo-500/20'
+                  ? 'border-[#119a6a] bg-[#e6f7f0]/50 ring-2 ring-[#119a6a]/20'
                   : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
               )}
             >
@@ -94,7 +94,7 @@ export function ModelSwitcher({ selectedModel, onModelChange, localModels }: Mod
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center flex-shrink-0"
+                    className="w-5 h-5 rounded-full bg-[#119a6a] flex items-center justify-center flex-shrink-0"
                   >
                     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path

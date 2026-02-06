@@ -75,7 +75,7 @@ export function PromptTemplates({ onApply, currentPrompt }: PromptTemplatesProps
         {currentPrompt && (
           <button
             onClick={() => setShowSaveDialog(true)}
-            className="text-xs text-indigo-600 hover:text-indigo-700"
+            className="text-xs text-[#119a6a] hover:text-[#0e7d56]"
           >
             Save current as template
           </button>
@@ -91,13 +91,13 @@ export function PromptTemplates({ onApply, currentPrompt }: PromptTemplatesProps
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="p-3 bg-indigo-50 rounded-lg space-y-2">
+            <div className="p-3 bg-[#e6f7f0] rounded-lg space-y-2">
               <input
                 type="text"
                 value={newTemplateName}
                 onChange={(e) => setNewTemplateName(e.target.value)}
                 placeholder="Template name"
-                className="w-full px-3 py-1.5 text-sm border border-indigo-200 rounded focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                className="w-full px-3 py-1.5 text-sm border border-indigo-200 rounded focus:ring-2 focus:ring-[#119a6a]/20 focus:border-[#119a6a]"
               />
               <div className="flex gap-2">
                 <Button size="sm" onClick={handleSaveAsTemplate} disabled={!newTemplateName.trim()}>
@@ -132,7 +132,7 @@ export function PromptTemplates({ onApply, currentPrompt }: PromptTemplatesProps
                   className={cn(
                     'p-3 rounded-lg border transition-colors cursor-pointer',
                     selectedTemplate?.id === template.id
-                      ? 'border-indigo-300 bg-indigo-50'
+                      ? 'border-[#119a6a] bg-[#e6f7f0]'
                       : 'border-slate-200 bg-white hover:border-slate-300'
                   )}
                   onClick={() => handleSelectTemplate(template)}
@@ -196,7 +196,7 @@ export function PromptTemplates({ onApply, currentPrompt }: PromptTemplatesProps
                                 setVariableValues((prev) => ({ ...prev, [variable]: e.target.value }))
                               }
                               placeholder={`Enter ${variable}...`}
-                              className="w-full px-2 py-1.5 text-sm border border-slate-200 rounded focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                              className="w-full px-2 py-1.5 text-sm border border-slate-200 rounded focus:ring-2 focus:ring-[#119a6a]/20 focus:border-[#119a6a]"
                             />
                           </div>
                         ))}

@@ -129,8 +129,8 @@ export function ComparisonView({ experiments, onClose }: ComparisonViewProps) {
 
       {/* Same prompt indicator */}
       {samePrompt && (
-        <div className="px-4 py-2 bg-indigo-50 border-b border-indigo-100">
-          <div className="flex items-center gap-2 text-sm text-indigo-700">
+        <div className="px-4 py-2 bg-[#e6f7f0] border-b border-[#e6f7f0]">
+          <div className="flex items-center gap-2 text-sm text-[#0e7d56]">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
@@ -140,7 +140,7 @@ export function ComparisonView({ experiments, onClose }: ComparisonViewProps) {
       )}
 
       {/* Winner selection */}
-      <div className="px-4 py-3 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-violet-50">
+      <div className="px-4 py-3 border-b border-slate-200 bg-gradient-to-r from-[#e6f7f0] to-[#e6f7f0]">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-sm font-medium text-slate-700">Select Winner</div>
@@ -250,7 +250,7 @@ export function ComparisonView({ experiments, onClose }: ComparisonViewProps) {
                     <div className="text-xs text-slate-500">Tokens</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-mono font-semibold text-indigo-600">
+                    <div className="text-sm font-mono font-semibold text-[#119a6a]">
                       {exp.metrics.tokensPerSecond.toFixed(1)}
                     </div>
                     <div className="text-xs text-slate-500">t/s</div>
@@ -262,7 +262,7 @@ export function ComparisonView({ experiments, onClose }: ComparisonViewProps) {
                   {/* Prompt */}
                   <div>
                     <div className="text-xs font-medium text-slate-500 mb-2">Prompt</div>
-                    <div className="p-3 bg-indigo-50 rounded-lg text-sm text-slate-700">
+                    <div className="p-3 bg-[#e6f7f0] rounded-lg text-sm text-slate-700">
                       {userMessage?.content}
                     </div>
                   </div>
@@ -290,7 +290,7 @@ export function ComparisonView({ experiments, onClose }: ComparisonViewProps) {
           value={notes}
           onChange={handleNotesChange}
           placeholder="Add notes about this comparison..."
-          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none"
+          className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#119a6a]/20 focus:border-[#119a6a] resize-none"
           rows={2}
         />
         {comparisonId && (

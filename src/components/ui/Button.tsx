@@ -14,10 +14,10 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
 
 const variants: Record<ButtonVariant, string> = {
   primary: `
-    bg-gradient-to-r from-indigo-500 to-violet-500
+    bg-[#119a6a]
     text-white font-medium
-    hover:from-indigo-600 hover:to-violet-600
-    focus:ring-2 focus:ring-indigo-500/50
+    hover:bg-[#15b87e]
+    focus:ring-2 focus:ring-[#119a6a]/50
     shadow-sm hover:shadow-md
   `,
   secondary: `

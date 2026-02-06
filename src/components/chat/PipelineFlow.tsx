@@ -15,8 +15,8 @@ interface PipelineFlowProps {
 const STATE_CONFIG: Record<PipelineState, { label: string; color: string; bgColor: string }> = {
   idle: { label: 'Ready', color: 'text-slate-400', bgColor: 'bg-slate-100' },
   pending: { label: 'Sending...', color: 'text-amber-500', bgColor: 'bg-amber-50' },
-  streaming: { label: 'Generating', color: 'text-blue-500', bgColor: 'bg-blue-50' },
-  complete: { label: 'Complete', color: 'text-emerald-500', bgColor: 'bg-emerald-50' },
+  streaming: { label: 'Generating', color: 'text-[#119a6a]', bgColor: 'bg-[#e6f7f0]' },
+  complete: { label: 'Complete', color: 'text-[#119a6a]', bgColor: 'bg-[#e6f7f0]' },
   error: { label: 'Error', color: 'text-red-500', bgColor: 'bg-red-50' },
 };
 
