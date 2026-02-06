@@ -67,6 +67,8 @@ npm run dev
 
 ## Architecture
 
+### System Overview
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        Frontend (React)                      │
@@ -86,6 +88,90 @@ npm run dev
               │   - gemma2:2b         │
               └───────────────────────┘
 ```
+
+### Component Architecture & Data Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                          USER INTERACTION                            │
+└────────────────────────────┬────────────────────────────────────────┘
+                             │
+                ┌────────────▼───────────────┐
+                │   1. PROMPT LAYER          │
+                │   - InputArea.tsx          │
+                │   - PromptTemplates.tsx    │
+                │   - Template variables     │
+                └────────────┬───────────────┘
+                             │ {prompt, model, parameters}
+                             │
+                ┌────────────▼───────────────┐
+                │   2. MODEL LAYER           │
+                │   - useOllama hook         │
+                │   - ollama-client.ts       │
+                │   - Streaming generator    │
+                └────────────┬───────────────┘
+                             │ Stream tokens + metrics
+                             │ {response, latency, tokens, etc}
+                             │
+                ┌────────────▼───────────────┐
+                │   3. RUN LOGGING LAYER     │
+                │   - useExperiments store   │
+                │   - Auto-create Experiment │
+                │   - Track metrics/params   │
+                │   - Persist to localStorage│
+                └────────────┬───────────────┘
+                             │ experiment_id
+                             │
+                ┌────────────▼───────────────┐
+                │   4. ANNOTATION LAYER      │
+                │   - AnnotationPanel.tsx    │
+                │   - Thumbs/Stars/Tags      │
+                │   - Radar scores (6-axis)  │
+                │   - Notes & comparison     │
+                └────────────┬───────────────┘
+                             │ {annotation → experiment}
+                             │
+                ┌────────────▼───────────────┐
+                │   VISUALIZATION            │
+                │   - ExperimentLog (list)   │
+                │   - ComparisonView (radar) │
+                │   - Export (CSV/JSON)      │
+                └────────────────────────────┘
+```
+
+### Data Flow Example
+
+**Scenario:** User sends "Write a haiku about debugging code" to Llama 3.2
+
+1. **Prompt Layer** → User types prompt, selects model (Llama 3.2), sets temperature (0.7)
+2. **Model Layer** → `useOllama` streams tokens from Ollama API, tracks TTFT (200ms), latency (9.3s), tokens (15)
+3. **Run Logging** → Auto-creates Experiment object with:
+   ```json
+   {
+     "id": "exp_abc123",
+     "modelId": "llama3.2:1b",
+     "messages": [{role: "user", content: "..."}, {role: "assistant", content: "..."}],
+     "metrics": {latencyMs: 9300, totalTokens: 15, tokensPerSecond: 45.2, ...},
+     "parameters": {temperature: 0.7, maxTokens: 2048, ...},
+     "createdAt": 1707856234000
+   }
+   ```
+4. **Annotation Layer** → User expands annotation panel, rates:
+   - Thumbs: 👍
+   - Stars: 5/5
+   - Radar: {accuracy: 3, relevance: 5, conciseness: 5, creativity: 4, format: 5, reasoning: 2}
+   - Tags: ["creative", "concise"]
+   - Notes: "Perfect 5-7-5 structure but simple imagery"
+5. **Visualization** → Experiment appears in ExperimentLog, radar visible in comparison view
+
+### State Management
+
+| Store | Responsibility | Persistence |
+|-------|---------------|-------------|
+| **useExperiments** | Experiments, comparisons, annotations | localStorage |
+| **usePromptTemplates** | Saved prompt templates | localStorage |
+| **useOllama** | Current chat session (ephemeral) | Memory only |
+| **App.tsx state** | UI state (current view, model, params) | Memory only |
 
 ## Tech Stack
 
