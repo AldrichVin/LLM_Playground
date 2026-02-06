@@ -100,45 +100,102 @@ npm run dev
 
 ## Model Rationale
 
-### Why These Three Models?
+### Why These Two Models?
 
-| Model | Size | Reasoning |
-|-------|------|-----------|
-| **Llama 3.2 1B** | 1B params | Meta's smallest model - excellent baseline for speed comparisons. Shows what's achievable with minimal compute. Fast TTFT, good for rapid prototyping. |
-| **Phi-3 Mini** | 3.8B params | Microsoft's "punching above its weight" model - strong reasoning despite small size. Good benchmark for quality vs. size tradeoff. |
-| **Gemma 2 2B** | 2B params | Google's quality-optimized small model. Sits between Llama and Phi-3, providing a middle ground for comparison. |
+I selected **Llama 3.2 1B** and **Phi-3 Mini (3.8B)** to explore the speed vs. quality tradeoff at different parameter counts.
 
-**Key insight:** These models were chosen to demonstrate the **speed vs. quality tradeoff** at different parameter counts:
-- 1B for speed (Llama)
-- 2B for balance (Gemma)
-- 3.8B for quality (Phi-3)
+| Model | Params | Avg Latency | Tokens/sec | Strengths | Weaknesses |
+|-------|--------|-------------|------------|-----------|------------|
+| **Llama 3.2 1B** | 1B | ~9s | 30-66 t/s | Fast, concise, creative tasks, format adherence | Reasoning errors, factual gaps |
+| **Phi-3 Mini** | 3.8B | ~12s | 15-29 t/s | Strong reasoning, factual accuracy | Slower, verbose, occasional code bugs |
 
-All three run comfortably on consumer hardware (8GB RAM) and have sub-second TTFT, making them ideal for interactive evaluation workflows.
+### What We Observed
+
+**The Reasoning Gap**: On a trick question ("A farmer has 17 sheep. All but 9 die. How many are left?"), **Llama incorrectly calculated 8** (17-9), while **Phi-3 correctly answered 9** and explained the linguistic trick. This validated Phi-3's stronger logical reasoning despite being 3.8x larger.
+
+**Code Quality Surprise**: Llama generated **clean, complete Python code** with docstrings and edge case documentation (364 tokens). Phi-3's output was **broken** with syntax errors (`cleaned end of function`). For code generation at temp 0.3, Llama significantly outperformed despite its size disadvantage.
+
+**Creative Format Adherence**: Asked for a haiku, Llama produced a perfect 5-7-5 structure in 15 tokens. Phi-3 generated 54 tokens of prose that completely ignored the format constraint.
+
+**The Latency-Quality Tradeoff is Real**: Llama averaged 9-10s with 30-66 t/s. Phi-3 averaged 12-38s with 15-29 t/s. For interactive evaluation, Llama's 3x speed advantage creates noticeably better UX, even when quality suffers.
+
+**Why This Pairing Works for Evaluation**:
+- Exposes clear tradeoffs (not just "better" vs "worse")
+- Both run on consumer hardware (8GB RAM)
+- Distinct strengths make comparison meaningful
+- Fast enough for iterative testing (sub-40s responses)
 
 ## Observations & Surprises
 
-During development and testing, several interesting patterns emerged:
+### Performance Discoveries
 
-### Performance Observations
-- **TTFT is more perceptually important than total latency** - Users notice the first token arriving more than total generation time
-- **Token throughput varies significantly by prompt type** - Code generation is slower than conversational responses
-- **Phi-3's reasoning really does shine** - Despite being only 3.8B, it handles logical puzzles better than the smaller models
+**TTFT Dominates Perceived Speed**: Time-to-first-token (TTFT) matters more than total latency for UX. Llama's 200-1300ms TTFT feels instant compared to Phi-3's 5000-30000ms (30 seconds!). Even though Phi-3 generates at 15-29 t/s, that 30-second wait before *anything* appears creates a "broken" feeling.
 
-### Model Behavior Differences
-- **Llama 3.2 1B** tends to be more concise, sometimes too terse
-- **Phi-3 Mini** produces more structured outputs (bullet points, numbered lists)
-- **Gemma 2** balances verbosity well but occasionally hallucinates on factual questions
+**Token Throughput Varies Wildly by Task**:
+- Code generation: Llama 27 t/s, Phi-3 17 t/s (both slow)
+- Simple factual: Llama 60+ t/s, Phi-3 15 t/s (Llama 4x faster)
+- Creative writing: Llama 1.8-66 t/s (extreme variance), Phi-3 7-14 t/s (consistent)
 
-### Unexpected Findings
-- Temperature has a **non-linear effect** on output quality - 0.7-0.8 was consistently the sweet spot across all three models
-- Streaming makes slower models feel faster - the psychological impact of seeing tokens appear is significant
-- The "evaluation surface" (rating outputs) fundamentally changes how users interact with the tool - they become more critical and systematic
+The variance suggests Llama's generation speed depends heavily on prompt complexity, while Phi-3 maintains steadier throughput.
+
+### Model Behavior Patterns
+
+**Llama's Conciseness is a Feature AND a Bug**:
+- Haiku prompt → 15 tokens, perfect format ✓
+- Code prompt → 364 tokens, complete with docs ✓
+- Reasoning prompt → 80 tokens, wrong answer but fast ✗
+
+Llama optimizes for brevity. When the task demands it (haiku, code), this is excellent. When it needs to "think through" a problem, it shortcuts to the wrong answer.
+
+**Phi-3's Verbosity Hides Failures**:
+```
+Prompt: "Write a haiku about debugging code"
+Output: "In lines and functions, Error whispers through arrays—
+peel back layers; fix them all. Harmony returned as bugs
+demure beneath resolved symphonies..." (54 tokens)
+```
+Not a haiku. But the prose *sounds* sophisticated, which makes the failure less obvious than Llama's terse errors.
+
+**Code Generation Inverts Expectations**: Despite Phi-3's 3.8x size advantage, Llama produced clean, runnable code while Phi-3 had syntax errors. At temperature 0.3 (precise), this suggests Llama's training may have stronger code representation despite fewer parameters.
+
+### Temperature Sensitivity
+
+Tested "What is machine learning?" at 0.2, 0.7, and 1.2 on both models:
+
+| Temp | Llama Behavior | Phi-3 Behavior |
+|------|----------------|----------------|
+| 0.2 | Dry but accurate (384 tokens, 13s) | Dry but accurate (126 tokens, 9.2s) |
+| 0.7 | Best balance (556 tokens, 9.3s) | Structured, detailed (330 tokens, 11.3s) |
+| 1.2 | Stays coherent (326 tokens, 4.9s) | Repetitive prose (140 tokens, 4.9s) |
+
+**Finding**: **0.7 is the sweet spot for both models**, but Llama tolerates higher temperatures better. At 1.2, Llama remains readable while Phi-3 starts repeating concepts.
+
+### Failure Modes
+
+**Llama Fails at**:
+- Trick questions / lateral thinking (answered 8 instead of 9)
+- Tasks requiring "showing work" (shortcuts to wrong conclusions)
+
+**Phi-3 Fails at**:
+- Format constraints (ignores haiku structure, writes run-on sentences)
+- Code correctness (syntax errors, incomplete implementations)
+- Speed (30-second TTFT makes it feel unresponsive)
+
+### UX Friction Discovered
+
+**Streaming Creates False Progress Illusion**: When Phi-3's TTFT hits 30 seconds, users assume it's broken. The streaming animation continues but without tokens, creating anxiety. **Solution needed**: Show "model loading" or "thinking" state during high-TTFT periods.
+
+**The Annotation System Changes Evaluation Behavior**: Once you add ratings/tags, you start treating experiments as data points instead of conversations. Users become more systematic—running variations, comparing outputs side-by-side, exporting CSV for analysis. The tool shifts from "chat" to "laboratory" once annotations are enabled.
+
+**Model Switching Mid-Evaluation is Critical**: Being able to re-run the same prompt on both models without retyping is essential. The comparison view enables this, but it requires post-hoc selection. A "Run on Both" button would streamline the workflow.
 
 ## Design Decisions
 
 ### Why localStorage over SQLite?
 
 For a demo/evaluation tool, localStorage provides sufficient persistence without the complexity of setting up a database. All experiments are stored as JSON and can be exported at any time.
+
+**Real-world validation**: After running 30+ experiments, localStorage handled ~2MB of data without performance issues. The JSON export feature provides an escape hatch if users need SQL-based analysis later.
 
 ### Streaming Implementation
 
@@ -201,12 +258,22 @@ Prioritized list of features not yet implemented:
 - ~~Pipeline visibility~~ ✅ Implemented as animated SVG diagram
 
 ### Remaining Work
-1. **Alternative interaction modes** - Image input for multimodal models, voice input
-2. **System prompt configuration** - UI for setting system prompts per model
-3. **Model parameter presets per model** - Different defaults for different model types
-4. **Batch evaluation** - Run same prompt across all models simultaneously
-5. **A/B comparison with blind rating** - Hide model names during evaluation to reduce bias
-6. **Session/conversation history** - Group related experiments into sessions
+
+Prioritized based on real usage patterns:
+
+1. **"Run on Both Models" Button** - Biggest UX friction is manually switching models and retyping prompts. A single button to execute on both would streamline comparative evaluation.
+
+2. **TTFT State Indicator** - When Phi-3's TTFT exceeds 10 seconds, show "Model Loading..." or thinking animation. Current empty streaming state feels broken.
+
+3. **Batch Evaluation** - Run same prompt across all models simultaneously, auto-log comparison results. Critical for systematic testing.
+
+4. **System Prompt Configuration** - Per-model system prompts would enable testing how different models respond to role instructions.
+
+5. **Blind Rating Mode** - Hide model names during evaluation to reduce bias. Only reveal after ratings are submitted.
+
+6. **Export Includes Comparison Runs** - CSV export currently only includes individual experiments, not comparison metadata (winner selection, notes).
+
+7. **Temperature Profiles Per Task** - Save "presets" like "Code Generation (0.3)" or "Creative Writing (1.2)" that bundle task-specific temperatures with model selection.
 
 ## Project Structure
 
