@@ -16,6 +16,7 @@ A design-forward interface for evaluating local LLMs with experiment tracking an
 - **Token Split Display** - See prompt tokens + completion tokens separately
 - **Dual Export** - Export experiments as JSON or CSV for spreadsheet analysis
 - **Annotation System** - Rate outputs with thumbs up/down, 5-star rating, and tags
+- **Evaluation Radar** - Multi-dimensional quality assessment with 6-axis radar chart (accuracy, relevance, conciseness, creativity, format, reasoning) and visual comparison overlays
 - **Model Statistics** - View per-model stats (runs, avg latency, preference rate)
 - **Local Persistence** - All experiments saved to localStorage
 
